@@ -22,7 +22,8 @@ class simpleApp_TK(Tkinter.Tk):
 		button.grid(column=1,row=0,sticky="EW")
 
 		button=Tkinter.Button(self,text=u"Play",command="")
-		button.grid(column=3,row=5)
+		button.grid(column=3,row=3)
+		button.place(relx=0.5,rely=0.5,anchor="center")
 		
 
 

@@ -10,19 +10,36 @@ def udpStream(CHUNK):
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    udp.bind(("10.0.0.1", 12345))
-
+    udp.bind(("10.0.0.3", 12345))
+    udp.settimeout(0.1)
+    soundData = ""
+    count=0
     while True:
-        soundData, addr = udp.recvfrom(CHUNK * CHANNELS * 2)
-        frames.append(soundData)
+        # print "here"+str(len(frames))
+        try:
+            soundData, addr = udp.recvfrom(CHUNK * CHANNELS * 2)
+        except socket.timeout,e:
+            print "time out"
+        # print soundData
+        # print "there"
+        
+        if soundData:
+            count+=1
+            print count
+            # udp.sendto(soundData, ("10.0.0.5", 12345))
+            frames.append(soundData)
 
     udp.close()
 
 def play(stream, CHUNK):
     BUFFER = 10
     while True:
+            # print len(frames)
             if len(frames) == BUFFER:
                 while True:
+                    # print "plaing"+str(len(frames))
+                    if len(frames) == 0:
+                        break
                     stream.write(frames.pop(0))
 
 if __name__ == "__main__":
