@@ -6,13 +6,18 @@ import wave
 
 frames = []
 
+broadcast_ip = '10.0.0.1'
+port = 12345
+
 def udpStream():
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  
     udp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  
+    # udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    udp.bind((broadcast_ip, port))
     # print 
     while True:
         if len(frames) > 0:
-            udp.sendto(frames.pop(0), ("127.0.0.1", 12345))
+            udp.sendto(frames.pop(0), (broadcast_ip, port))
 
     udp.close()
 
@@ -46,17 +51,25 @@ if __name__ == "__main__":
                     channels = CHANNELS,
                     rate = RATE,
                     input = True,
-                    # frames_per_buffer = CHUNK,
+                    frames_per_buffer = CHUNK,
                     )
 
     # read data
     frame = wf.readframes(CHUNK)
 
     Tr = Thread(target = record, args = (stream, CHUNK,))
+    # Tr2 = Thread(target = record, args = (stream, CHUNK,))
+    # Tr3 = Thread(target = record, args = (stream, CHUNK,))
     Ts = Thread(target = udpStream)
     Tr.setDaemon(True)
+    # Tr2.setDaemon(True)
+    # Tr3.setDaemon(True)
     Ts.setDaemon(True)
     Tr.start()
+    # Tr2.start()
+    # Tr3.start()
     Ts.start()
     Tr.join()
+    # Tr2.join()
+    # Tr3.join()
     Ts.join()
