@@ -1,5 +1,6 @@
 import pyaudio
 import socket
+import time
 from threading import Thread
 
 frames = []
@@ -8,7 +9,8 @@ def udpStream(CHUNK):
 
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    udp.bind(("127.0.0.1", 12345))
+    # udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    udp.bind(("10.0.0.1", 12345))
 
     while True:
         soundData, addr = udp.recvfrom(CHUNK * CHANNELS * 2)
@@ -45,7 +47,7 @@ if __name__ == "__main__":
                     output = True,
                     frames_per_buffer = CHUNK,
                     )
-
+    time.sleep(2)
     Ts = Thread(target = udpStream, args=(CHUNK,))
     Tp = Thread(target = play, args=(stream, CHUNK,))
     Ts.setDaemon(True)
