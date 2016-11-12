@@ -11,21 +11,38 @@ class simpleApp_TK(Tkinter.Tk):
 
 	def initialize(self):
 		self.grid()
-		global entryText
+		global entryText,var1
 		entryText=""
 		entryText=Tkinter.StringVar()
+
+		self.var1=Tkinter.IntVar()
+
+		label=Tkinter.Label(self,anchor="center",fg="black",bg="white",text="choose music and play :D")
+		label.grid(column=0,row=1,columnspan=2,sticky="EW")
+
 		self.entry=Tkinter.Entry(self,textvariable=entryText)
-		self.entry.grid(column=0,row=0,sticky="EW")
+		self.entry.grid(column=0,row=3,sticky="EW")
 		self.entry.focus_set()
 
 		button=Tkinter.Button(self,text=u"Browse for musics...",command=self.OnButtonClick)
-		button.grid(column=1,row=0,sticky="EW")
+		button.grid(column=1,row=3,sticky="EW")
+
+		label1=Tkinter.Label(self,anchor="center",fg="black",bg="white",text="choose your role yeah~")
+		label1.grid(column=0,row=5,columnspan=2,sticky="EW")
+
+		rb1=Tkinter.Radiobutton(self,text="player",value=1,variable=self.var1)
+		rb2=Tkinter.Radiobutton(self,text="wireless speaker",value=2,variable=self.var1)
+		rb1.grid(column=0,row=7,padx=50,columnspan=2,sticky="EW")
+		rb2.grid(column=0,row=8,padx=50,columnspan=2,sticky="EW")
 
 		
-		button1=Tkinter.Button(self,text=u"Play",command=self.playMusic)
-		button1.grid(column=3,row=3)
-		button1.place(relx=0.5,rely=0.5,anchor="center")
+
 		
+		
+		button1=Tkinter.Button(self,text=u"Play",command=self.playMusic)
+		button1.grid(column=3,row=5)
+		button1.place(relx=0.5,rely=0.5,anchor="center")
+
 
 
 		self.grid_columnconfigure(0,weight=1)
@@ -34,21 +51,23 @@ class simpleApp_TK(Tkinter.Tk):
 
 	
 	def OnButtonClick(self):
-			# self.withdraw()
-			# currdir=os.getcwd()
-			# tempdir = askdirectory(parent=self, initialdir=currdir, title='Please select a directory')
-			path=askopenfilename()
-			filename=os.path.basename(path)
-			entryText.set(filename)
+			mPath=askopenfilename()
+			# print mPath
+			mFilename=os.path.basename(mPath)
+			# print mFilename
+			entryText.set(mFilename)
 		
 	def playMusic(self):
-		os.system('python client.py '+self.entry.get())		
+		if self.var1.get()==1:
+			os.system('python client.py '+self.entry.get())
+		elif self.var1.get()==2:
+			os.system('python server.py')
 
         	        
 
 if __name__=="__main__":
 	app=simpleApp_TK(None)
 	app.title('Wireless speaker')
-	app.geometry('{}x{}'.format(500,500))
+	app.geometry('{}x{}'.format(270,270))
 	app.mainloop()
 
