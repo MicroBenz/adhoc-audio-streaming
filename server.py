@@ -4,7 +4,7 @@ import time
 from threading import Thread
 
 frames = []
-
+# current_milli_time=lambda: int(round(time.time()*1000))
 def udpStream(CHUNK):
 
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -16,17 +16,19 @@ def udpStream(CHUNK):
     count=0
     while True:
         # print "here"+str(len(frames))
+        isTimeout=False
         try:
             soundData, addr = udp.recvfrom(CHUNK * CHANNELS * 2)
         except socket.timeout,e:
             print "time out"
+            isTimeout=True
         # print soundData
         # print "there"
         
-        if soundData:
+        if soundData and not isTimeout:
             count+=1
             print count
-            # udp.sendto(soundData, ("10.0.0.5", 12345))
+            udp.sendto(soundData, ('10.0.0.4', 12345))
             frames.append(soundData)
 
     udp.close()
@@ -34,6 +36,7 @@ def udpStream(CHUNK):
 def play(stream, CHUNK):
     BUFFER = 10
     while True:
+            # print current_milli_time()
             # print len(frames)
             if len(frames) == BUFFER:
                 while True:
@@ -70,6 +73,7 @@ if __name__ == "__main__":
     Ts.setDaemon(True)
     Tp.setDaemon(True)
     Ts.start()
+    # time.sleep(0.5)
     Tp.start()
     Ts.join()
     Tp.join()
