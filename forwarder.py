@@ -4,8 +4,8 @@ import time
 from threading import Thread
 
 frames = []
-client_ip = '10.0.0.4'
-server_ip = ''
+client_ip = '10.0.0.3'
+server_ip = '10.0.0.4'
 port = 12345
 
 def udpStream(CHUNK):
@@ -27,6 +27,7 @@ def udpStream(CHUNK):
         if soundData and not isTimeout:
             count+=1
             print count
+            udp.sendto(soundData, (server_ip, port))
             frames.append(soundData)
 
     udp.close()
