@@ -31,9 +31,11 @@ class simpleApp_TK(Tkinter.Tk):
 		label1.grid(column=0,row=5,columnspan=2,sticky="EW")
 
 		rb1=Tkinter.Radiobutton(self,text="player",value=1,variable=self.var1)
-		rb2=Tkinter.Radiobutton(self,text="wireless speaker",value=2,variable=self.var1)
-		rb1.grid(column=0,row=7,padx=50,columnspan=2,sticky="EW")
-		rb2.grid(column=0,row=8,padx=50,columnspan=2,sticky="EW")
+		rb2=Tkinter.Radiobutton(self,text="wireless speaker(forwarder) ",value=2,variable=self.var1)
+		rb3=Tkinter.Radiobutton(self,text="wireless speaker(last hop) ",value=3,variable=self.var1)
+		rb1.grid(column=0,row=8,padx=50,columnspan=2,sticky="EW")
+		rb2.grid(column=0,row=9,padx=50,columnspan=3,sticky="EW")
+		rb3.grid(column=0,row=10,padx=50,columnspan=3,sticky="EW")
 
 		
 
@@ -41,7 +43,7 @@ class simpleApp_TK(Tkinter.Tk):
 		
 		button1=Tkinter.Button(self,text=u"Play",command=self.playMusic)
 		button1.grid(column=3,row=5)
-		button1.place(relx=0.5,rely=0.5,anchor="center")
+		button1.place(relx=0.5,rely=0.6,anchor="center")
 
 
 
@@ -61,13 +63,15 @@ class simpleApp_TK(Tkinter.Tk):
 		if self.var1.get()==1:
 			os.system('python client.py '+self.entry.get())
 		elif self.var1.get()==2:
-			os.system('python server.py')
+			os.system('python forwarder.py')
+		else:
+			os.system('python server.py')	
 
         	        
 
 if __name__=="__main__":
 	app=simpleApp_TK(None)
 	app.title('Wireless speaker')
-	app.geometry('{}x{}'.format(270,270))
+	app.geometry('{}x{}'.format(300,300))
 	app.mainloop()
 
